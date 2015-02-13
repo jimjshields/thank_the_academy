@@ -1,0 +1,46 @@
+<style>
+	* {
+		text-align: center;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+   		font-weight: 300;
+	}
+	div {
+		border-radius: 8px;
+		opacity: 90%;
+		position: relative;
+		top: 45%;
+		padding-top: 100px;
+		padding-bottom: 100px;
+		transform: translateY(-50%);
+		background-image: url('http://media.tumblr.com/1566776e0b2d6949681f03120a7f80a6/tumblr_inline_n5tyxgqCOh1r8s7a3.png');
+   		background-repeat: no-repeat;
+   		background-position: center;
+	}
+
+	p {
+		font-size: 24px;
+		/*color: #FFED1C;*/
+	}
+
+	input {
+		background-color: #b29254;
+		width: 200px;
+		height: 50px;
+		padding: 5px;
+		border: 2px solid black;
+		border-radius: 10px;
+		font-size: 20px;
+	}
+	input:hover {
+		background-color: #FFED1C;
+		opacity: 100%;
+	}
+</style>
+
+<div id="speech">
+	<p>{{ speech }}</p>
+	<form action="make_speech">
+		<!-- <input type="text" name="length" placeholder="How long?"> -->
+		<input type="submit" value="Thank the Academy!">
+	</form>
+</div>

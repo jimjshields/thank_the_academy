@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
 
 app = Flask(__name__)
@@ -19,8 +19,13 @@ all_speeches = ' '.join(speeches)
 
 @app.route('/')
 def index():
-	markov_gen = MarkovGenerator(all_speeches, 2000, 8)
-	return markov_gen.generate_words().replace('  ', '@').replace(' ', '').replace('@', ' ')
+	markov_gen = MarkovGenerator(all_speeches, 1500, 10)
+	speech = markov_gen.generate_words().replace('  ', '@').replace(' ', '').replace('@', ' ')
+	return render_template('index.html', speech=speech)
+
+@app.route('/make_speech', methods=['POST', 'GET'])
+def make_speech():
+	return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

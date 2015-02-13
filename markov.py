@@ -91,22 +91,3 @@ class MarkovGenerator(object):
         if generated_text[-2] in string.punctuation:
             generated_text = generated_text[:-2] + '.'
         return self.tickmark_cleanup(generated_text)
-
-
-# import csv
-
-# speeches = []
-
-# with open('speeches.csv', 'rU') as csv_file:
-# 	data = csv.reader(csv_file)
-# 	for row in data:
-# 		speeches.append(row)
-
-
-# speeches = map(lambda speech: speech[6], speeches)
-
-# all_speeches = ' '.join(speeches)
-
-# markov_gen = MarkovGenerator(all_speeches, 2000, 8)
-
-# print markov_gen.generate_words().replace('  ', '@').replace(' ', '').replace('@', ' ')
