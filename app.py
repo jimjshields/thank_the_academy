@@ -21,6 +21,7 @@ def get_csv_data():
 	with open('speeches.csv', 'rU') as csv_file:
 		data = csv.reader(csv_file)
 		for row in data:
+			# FIX: There has to be a better way to deal with non-ASCII characters.
 			speeches.append([unicode(cell, errors='ignore') for cell in row])
 	return speeches
 
@@ -39,6 +40,7 @@ def generate_markov_words(markov_gen):
 	new_speech = markov_gen.generate_words().replace('  ', '@').replace(' ', '').replace('@', ' ')
 	return new_speech
 
+# Only do all of this the first time the page is open.
 speech_data = get_csv_data()
 only_speeches = get_only_speeches(speech_data)
 all_speeches = ' '.join(only_speeches)
@@ -47,11 +49,16 @@ new_speech = generate_markov_words(markov_gen)
 
 @app.route('/')
 def index():
+	"""Returns the landing page, to which you're redirected every time you
+	   click the button."""
+
 	new_speech = generate_markov_words(markov_gen)
 	return render_template('index.html', speech=new_speech)
 
 @app.route('/make_speech', methods=['POST', 'GET'])
 def make_speech():
+	"""Returns a new Markov-generated speech every time you click."""
+
 	return redirect(url_for('index'))
 
 if __name__ == '__main__':
