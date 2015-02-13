@@ -1,40 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="http://necolas.github.io/normalize.css/3.0.2/normalize.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
 <style>
 	* {
 		text-align: center;
 		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
    		font-weight: 300;
 	}
-	div {
-		border-radius: 8px;
-		opacity: 90%;
-		position: relative;
-		top: 45%;
-		padding-top: 100px;
-		padding-bottom: 100px;
-		transform: translateY(-50%);
+
+	.outer {
+	    text-align: center;
+	    display: table;
+	    position: absolute;
+	    height: 100%;
+	    width: 100%;
 		background-image: url('http://media.tumblr.com/1566776e0b2d6949681f03120a7f80a6/tumblr_inline_n5tyxgqCOh1r8s7a3.png');
    		background-repeat: no-repeat;
    		background-position: center;
 	}
 
+	.inner {
+		padding-left: 50px;
+		padding-right: 50px;
+	    display: table-cell;
+	    vertical-align: middle;
+	}
+
 	p {
 		font-size: 24px;
-		/*color: #FFED1C;*/
 	}
 
 	input {
 		background-color: #b29254;
-		width: 200px;
+		width: 225px;
 		height: 50px;
 		padding: 5px;
 		border: 2px solid black;
 		border-radius: 10px;
 		font-size: 20px;
 	}
+
 	input:hover {
-		background-color: #FFED1C;
-		opacity: 100%;
+		background-color: #F5DE2B;
+		font-weight: bold;
 	}
+
 </style>
 
 <script>
@@ -47,11 +62,28 @@
   ga('send', 'pageview');
 
 </script>
+</head>
 
-<div id="speech">
-	<p>{{ speech }}</p>
-	<form action="make_speech">
-		<!-- <input type="text" name="length" placeholder="How long?"> -->
-		<input type="submit" value="Thank the Academy!">
-	</form>
+<body>
+
+<div class="outer">
+	<div class="inner">
+		<p>{{ speech }}</p>
+		<form action="make_speech">
+			<!-- <input type="text" name="length" placeholder="How long?"> -->
+			<input type="submit" value="Thank the Academy!">
+		</form>
+	</div>
 </div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Thank The Academy<span class="sr-only">(current)</span></a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
+      </ul>
+  </div>
+</nav>
+</body>
+</html>
