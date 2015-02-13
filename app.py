@@ -47,6 +47,8 @@ all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
 new_speech = generate_markov_words(markov_gen)
 
+### Routing ###
+
 @app.route('/')
 def index():
 	"""Returns the landing page, to which you're redirected every time you
@@ -60,6 +62,12 @@ def make_speech():
 	"""Returns a new Markov-generated speech every time you click."""
 
 	return redirect(url_for('index'))
+
+@app.route('/about')
+def about():
+	"""Returns the about page."""
+
+	return render_template('about.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
