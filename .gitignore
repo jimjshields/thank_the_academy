@@ -1,4 +1,6 @@
 test.csv
 venv
-test
+test*
 *.pyc
+encoding_fix*
+speeches.txt

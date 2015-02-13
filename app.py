@@ -1,6 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-import time
+import time, csv
+
+app = Flask(__name__)
+
+### Utility function for profiling ###
 
 def timefunc(f):
 	def f_timer(*args, **kwargs):
@@ -11,17 +15,13 @@ def timefunc(f):
 		return result
 	return f_timer
 
-app = Flask(__name__)
-
-import csv
-
 @timefunc
 def get_csv_data():
 	speeches = []
 	with open('speeches.csv', 'rU') as csv_file:
 		data = csv.reader(csv_file)
 		for row in data:
-			speeches.append(row)
+			speeches.append([unicode(cell, errors='ignore') for cell in row])
 	return speeches
 
 @timefunc
@@ -45,7 +45,6 @@ all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
 new_speech = generate_markov_words(markov_gen)
 
-
 @app.route('/')
 def index():
 	new_speech = generate_markov_words(markov_gen)
@@ -54,7 +53,6 @@ def index():
 @app.route('/make_speech', methods=['POST', 'GET'])
 def make_speech():
 	return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
 	app.run(debug=True)
