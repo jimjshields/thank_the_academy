@@ -1,12 +1,8 @@
-beautifulsoup4==4.3.2
-bpython==0.13.2
 Flask==0.10.1
 gunicorn==19.2.1
 itsdangerous==0.24
 Jinja2==2.7.3
-markovgenerator==2015.2
 MarkupSafe==0.23
 nltk==3.0.1
-requests==2.5.1
 virtualenv==12.0.5
 Werkzeug==0.10.1
