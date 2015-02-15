@@ -7,7 +7,11 @@ app = Flask(__name__)
 ### Utility function for profiling ###
 
 def timefunc(f):
+	"""Decorator for timing functions."""
+	
 	def f_timer(*args, **kwargs):
+		"""Returns the time (ms) a function takes to run."""
+
 		start = time.time()
 		result = f(*args, **kwargs)
 		end = time.time()
@@ -17,6 +21,8 @@ def timefunc(f):
 
 @timefunc
 def get_csv_data():
+	"""Returns an array of arrays of all speech data."""
+
 	speeches = []
 	with open('speeches.csv', 'rU') as csv_file:
 		data = csv.reader(csv_file)
@@ -27,16 +33,22 @@ def get_csv_data():
 
 @timefunc
 def get_only_speeches(speech_data):
+	"""Returns an array of only the speeches from the csv data."""
+
 	only_speeches = map(lambda speech: speech[6], speech_data)
 	return only_speeches
 
 @timefunc
 def create_markov_gen(all_speeches):
+	"""Returns a markov generator for a given word count and n-gram."""
+
 	markov_gen = MarkovGenerator(all_speeches, 1500, 10)
 	return markov_gen
 
 @timefunc
 def generate_markov_words(markov_gen):
+	"""Given a markov generator, returns a formatted speech."""
+
 	new_speech = markov_gen.generate_words().replace('  ', '@').replace(' ', '').replace('@', ' ')
 	return new_speech
 
