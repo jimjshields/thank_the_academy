@@ -1,0 +1,143 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+<style>
+
+.bar {
+	fill: steelblue;
+}
+
+.bar:hover {
+	fill: brown;
+}
+
+.axis {
+	font-size: 18px;
+}
+
+.axis path {
+	display: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.x.axis path {
+	display: none;
+}
+
+#tooltip > table {
+	font-size: 18px;
+	width: 100%;
+	line-height: 30px;
+}
+
+#speech, #hide {
+	display: none;
+}
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+<h1 id="graph_header">Oscar Speech Length (words) by Year</h1>
+<div id="speech_length"></div>
+
+<div id="tooltip">
+	<p><b>Winner:</b> <span id="winner"></span></p>
+	<p><b>Speech length (words):</b> <span id="length"></span></p>
+  	<p><b>Year:</b> <span id="year"></span></p>
+  	<p><b>Award:</b> <span id="award"></span></p>
+  	<p><b>Movie:</b> <span id="movie"></span></p>
+  	<p id="speech_button"><b>Speech (click to <span id="show"><b>show</b></span><span id="hide"><b>hide</b></span>):</b><span id="speech"></span></p>
+</div>
+
+
+<script>
+
+var data = {{ data|tojson|safe }}
+
+$("#speech_button").click(function() {
+	$("#graph_header").slideToggle();
+	$("#show").toggle();
+	$("#hide").toggle();
+	$("#speech_length").slideToggle();
+	$("#speech").slideToggle();
+});
+
+function drawBarGraph(data, div_name) {
+
+    var margin = {top: 10, right: 20, bottom: 30, left: 80};
+    var width = 1300 - margin.left - margin.right;
+    var height = 400 - margin.top - margin.bottom;
+    var barPadding = 0.5;
+
+    var svg = d3.select("#speech_length").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var x = d3.time.scale()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    console.log(data)
+
+    x.domain(d3.extent(data, function(d) { return d[9]; }));
+    y.domain([0, d3.max(data, function(d) { return d[10]; })]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(5)
+        .tickFormat(d3.format(""));
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(+d[9]); })
+        .attr("width", (width / data.length))
+        .attr("y", function(d) { return y(d[10]); })
+        .attr("height", function(d) { return height - y(d[10]); })
+        .on("mousemove", function(d) {
+        	$("#winner").text(d[3])
+        	$("#length").text(d[10])
+        	$("#year").text(d[7])
+        	$("#award").text(d[1])
+        	$("#movie").text(d[2])
+        	$("#speech").text(d[6])
+        });
+};
+
+drawBarGraph(data);
+
+</script>
+
+{% endblock %}
+
+{% block footer %}
+	<li><a href="/">Thank The Academy</a></li>
+	<li class="active"><a href="/analysis">Analysis<span class="sr-only">(current)</span></a></li>
+	<li><a href="/about">About</a></li>
+    <li><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
+{% endblock %}

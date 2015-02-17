@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-from data import timefunc, get_csv_data, get_only_speeches
+from data import timefunc, get_csv_data, get_only_speeches, get_speech_length
 
 app = Flask(__name__)
 
@@ -54,7 +54,11 @@ def about():
 
 	return render_template('about.html')
 
-	
+@app.route('/analysis')
+def analysis():
+	"""Returns the analysis page."""
+
+	return render_template('analysis.html', data=full_data)
 
 if __name__ == '__main__':
 	app.run(debug=True)
