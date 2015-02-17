@@ -27,14 +27,23 @@
 	display: none;
 }
 
-#tooltip > table {
-	font-size: 18px;
-	width: 100%;
-	line-height: 30px;
+#speech, #hide, #speech_length_viz, #avg_speech_length_viz {
+	display: none;
 }
 
-#speech, #hide, #speech_length_viz {
-	display: none;
+button {
+	font-size: 30px;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	background-color: #b29254;
+}
+
+button:hover {
+	background-color: #F5DE2B;
 }
 
 </style>
@@ -42,7 +51,7 @@
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 
-<h1 id="speech_length_header">Oscar Speech Length (words) by Year</h1>
+<button id="speech_length_header">Oscar Speech Length (words) by Year</button>
 	<div id="speech_length_viz">
 	<div id="speech_length"></div>
 
@@ -56,9 +65,19 @@
 	</div>
 	</div>
 
+<button id="avg_speech_length_header">Avg. Speech Length (words) by Year</button>
+	<div id="avg_speech_length_viz">
+	<div id="avg_speech_length"></div>
+	<div id="avg_tooltip">
+		<p><b>Year:</b> <span id="avg_year"></span></p>
+		<p><b>Avg. speech length (words):</b> <span id="avg_length"></span></p>
+	</div>
+	</div>
+
 <script>
 
-var data = {{ data|tojson|safe }}
+var full_data = {{ full_data|tojson|safe }}
+var avg_by_year = {{ avg_by_year|tojson|safe }}
 
 $("#speech_button").click(function() {
 	$("#speech_length_header").slideToggle();
@@ -70,6 +89,12 @@ $("#speech_button").click(function() {
 
 $("#speech_length_header").click(function() {
 	$("#speech_length_viz").slideToggle();
+	$("#avg_speech_length_header").slideToggle();
+});
+
+$("#avg_speech_length_header").click(function() {
+	$("#avg_speech_length_viz").slideToggle();
+	$("#speech_length_header").slideToggle();
 });
 
 function drawBarGraph(data, div_name) {
@@ -134,7 +159,66 @@ function drawBarGraph(data, div_name) {
         });
 };
 
-drawBarGraph(data);
+function drawAvgBarGraph(data, div_name) {
+
+    var margin = {top: 10, right: 20, bottom: 30, left: 80};
+    var width = 1300 - margin.left - margin.right;
+    var height = 400 - margin.top - margin.bottom;
+    var barPadding = 0.5;
+
+    var svg = d3.select("#avg_speech_length").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var x = d3.time.scale()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    console.log(data)
+
+    x.domain(d3.extent(data, function(d) { return d[0]; }));
+    y.domain([0, d3.max(data, function(d) { return d[1]; })]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(5)
+        .tickFormat(d3.format(""));
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(+d[0]); })
+        .attr("width", (width / data.length))
+        .attr("y", function(d) { return y(d[1]); })
+        .attr("height", function(d) { return height - y(d[1]); })
+        .on("mousemove", function(d) {
+        	$("#avg_year").text(d[0])
+        	$("#avg_length").text(d[1])
+        });
+};
+
+drawBarGraph(full_data);
+drawAvgBarGraph(avg_by_year)
 
 </script>
 

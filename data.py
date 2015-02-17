@@ -41,12 +41,25 @@ def get_speech_length(speech):
 	words = speech.split(' ')
 	return len(words)
 
-speech_data = get_csv_data()
-non_honorary = filter(lambda row: row[8] != 'Honorary Award', speech_data)
-full_data = filter(lambda row: int(row[7]) >= 1966, non_honorary)
+def get_average_by_year(speech_data_w_lengths):
+	"""Returns the average length of a speech in words per year."""
 
-for row in full_data:
-	row.append(get_speech_length(row[6]))
+	avg_by_year = {}
+
+	for row in speech_data_w_lengths:
+		if row[7] not in avg_by_year:
+			avg_by_year[row[7]] = [row[10], 1]
+		else:
+			avg_by_year[row[7]][0] += row[10]
+			avg_by_year[row[7]][1] += 1
+
+	new_avg_by_year = []
+
+	for year in avg_by_year:
+		new_avg_by_year.append([year, avg_by_year[year][0]/avg_by_year[year][1]])
+
+	return new_avg_by_year
+
 
 # longest = sorted(full_data, key=lambda row: row[9], reverse=True)[:10]
 
