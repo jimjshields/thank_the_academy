@@ -4,3 +4,4 @@ test*
 *.pyc
 encoding_fix*
 speeches.txt
+*.csv

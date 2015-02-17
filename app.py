@@ -1,42 +1,8 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-import time, csv
+from data import timefunc, get_csv_data, get_only_speeches
 
 app = Flask(__name__)
-
-### Utility function for profiling ###
-
-def timefunc(f):
-	"""Decorator for timing functions."""
-	
-	def f_timer(*args, **kwargs):
-		"""Returns the time (ms) a function takes to run."""
-
-		start = time.time()
-		result = f(*args, **kwargs)
-		end = time.time()
-		print f.__name__, 'took', end - start, 'time'
-		return result
-	return f_timer
-
-@timefunc
-def get_csv_data():
-	"""Returns an array of arrays of all speech data."""
-
-	speeches = []
-	with open('speeches.csv', 'rU') as csv_file:
-		data = csv.reader(csv_file)
-		for row in data:
-			# FIX: There has to be a better way to deal with non-ASCII characters.
-			speeches.append([unicode(cell, errors='ignore') for cell in row])
-	return speeches
-
-@timefunc
-def get_only_speeches(speech_data):
-	"""Returns an array of only the speeches from the csv data."""
-
-	only_speeches = map(lambda speech: speech[6], speech_data)
-	return only_speeches
 
 @timefunc
 def create_markov_gen(all_speeches):
@@ -59,6 +25,13 @@ all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
 new_speech = generate_markov_words(markov_gen)
 
+non_honorary = filter(lambda row: row[8] != 'Honorary Award', speech_data)
+full_data = filter(lambda row: int(row[7]) >= 1966, non_honorary)
+
+for row in full_data:
+	row.append(get_speech_length(row[6]))
+
+
 ### Routing ###
 
 @app.route('/')
@@ -80,6 +53,8 @@ def about():
 	"""Returns the about page."""
 
 	return render_template('about.html')
+
+	
 
 if __name__ == '__main__':
 	app.run(debug=True)
