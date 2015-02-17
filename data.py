@@ -60,6 +60,29 @@ def get_average_by_year(speech_data_w_lengths):
 
 	return new_avg_by_year
 
+def get_presenter_count(speech_data_w_lengths):
+	"""Returns an array of arrays of presenters and count."""
+
+	presenter_count = {}
+
+	for row in speech_data_w_lengths:
+		presenters = row[4].split(', ')
+		for presenter in presenters:
+			if presenter not in presenter_count:
+				presenter_count[presenter] = 1
+			else:
+				presenter_count[presenter] += 1
+
+	ranked_presenters = []
+
+	for presenter in presenter_count:
+		ranked_presenters.append([presenter, presenter_count[presenter]])
+
+	ranked_presenters.sort(key=lambda x: x[1], reverse=True)
+
+	return ranked_presenters
+
+
 
 # longest = sorted(full_data, key=lambda row: row[9], reverse=True)[:10]
 
