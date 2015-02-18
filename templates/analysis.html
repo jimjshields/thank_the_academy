@@ -50,6 +50,22 @@ p {
 	font-size: 16px;
 }
 
+#sort_checkbox {
+    height: 15px;
+}
+
+label {
+    position: absolute;
+    display: flex;
+    width: 175px;
+    left: 250px;
+    flex-grow: 4;
+}
+
+label > input {
+    flex-grow: 1;
+}
+
 </style>
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -57,8 +73,9 @@ p {
 
 <button id="speech_length_header">Oscar Speech Length (words) by Year</button>
 	<div id="speech_length_viz">
-	<div id="speech_length"></div>
-
+	<div id="speech_length">
+        <label>Sort by length<input type="checkbox" id="sort_checkbox"></label>
+    </div>
 	<div id="tooltip">
 		<p><b>Winner:</b> <span id="winner"></span></p>
 		<p><b>Speech length (words):</b> <span id="length"></span></p>
@@ -117,12 +134,16 @@ function drawBarGraph(data, div_name) {
     var x = d3.time.scale()
         .range([0, width]);
 
+    var x0 = d3.time.scale()
+        .range([0, width]);
+
     var y = d3.scale.linear()
         .range([height, 0]);
 
     console.log(data)
 
     x.domain(d3.extent(data, function(d) { return d[9]; }));
+    x0.domain(d3.extent(data, function(d) { return d[10]; }));
     y.domain([0, d3.max(data, function(d) { return d[10]; })]);
 
     var xAxis = d3.svg.axis()
@@ -136,6 +157,12 @@ function drawBarGraph(data, div_name) {
         .orient("left")
         .ticks(10);
 
+    var x0Axis = d3.svg.axis()
+        .scale(x0)
+        .orient("bottom")
+        .ticks(5)
+        .tickFormat(d3.format(""));
+
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -147,6 +174,7 @@ function drawBarGraph(data, div_name) {
 
     svg.selectAll(".bar")
         .data(data)
+            .sort(function(a, b) { return d3.descending(a[10], b[10])})
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(+d[9]); })
@@ -161,6 +189,35 @@ function drawBarGraph(data, div_name) {
         	$("#movie").text(d[2])
         	$("#speech").text(d[6])
         });
+
+    d3.select("#sort_checkbox").on("change", change);
+
+    var sortTimeout = setTimeout(function() {
+        d3.select("#sort_checkbox").property("checked", true).each(change); 
+    }, 2000);
+
+
+        function change() {
+
+            var transition = svg.transition().duration(50),
+                delay = function(d, i) { return i/2; };
+
+            transition.selectAll(".bar")
+                .delay(delay)
+                .attr("x", this.checked
+                ? function(d) { return x0(d[10]); }
+                : function(d) { return x(d[9]); })
+                .attr("width", this.checked
+                ? (width * 4 / data.length)
+                : (width / data.length))
+
+            transition.select(".x.axis")
+                .call(this.checked
+                    ? x0Axis
+                    : xAxis)
+              .selectAll("g")
+                .delay(delay);
+        };
 };
 
 function drawAvgBarGraph(data, div_name) {
