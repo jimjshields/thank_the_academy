@@ -23,7 +23,6 @@ speech_data = get_csv_data()
 only_speeches = get_only_speeches(speech_data)
 all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
-new_speech = generate_markov_words(markov_gen)
 
 non_honorary = filter(lambda row: row[8] != 'Honorary Award', speech_data)
 full_data = filter(lambda row: int(row[7]) >= 1966, non_honorary)
@@ -31,12 +30,7 @@ full_data = filter(lambda row: int(row[7]) >= 1966, non_honorary)
 for row in full_data:
 	row.append(get_speech_length(row[6]))
 
-actors = filter(lambda row: row[8] == 'Actor in a Leading Role', full_data)
-
-avg_by_year = get_average_by_year(full_data)
-
-selected_categories = ['Actress in a Supporting Role', 'Actress in a Supporting Role']
-filtered_data = get_filtered_data(full_data, selected_categories)
+# avg_by_year = get_average_by_year(full_data)
 
 ### Routing ###
 
