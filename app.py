@@ -4,14 +4,12 @@ from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, g
 
 app = Flask(__name__)
 
-@timefunc
 def create_markov_gen(all_speeches):
 	"""Returns a markov generator for a given word count and n-gram."""
 
 	markov_gen = MarkovGenerator(all_speeches, 1500, 10)
 	return markov_gen
 
-@timefunc
 def generate_markov_words(markov_gen):
 	"""Given a markov generator, returns a formatted speech."""
 
@@ -24,8 +22,7 @@ only_speeches = get_only_speeches(speech_data)
 all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
 
-non_honorary = filter(lambda row: row[8] != 'Honorary Award', speech_data)
-full_data = filter(lambda row: int(row[7]) >= 1966, non_honorary)
+full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', speech_data))
 
 for row in full_data:
 	row.append(get_speech_length(row[6]))
@@ -58,7 +55,7 @@ def about():
 def analysis():
 	"""Returns the analysis page."""
 
-	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, filtered_data=filtered_data)
+	return render_template('analysis.html', full_data=full_data)
 
 if __name__ == '__main__':
 	app.run(debug=True)

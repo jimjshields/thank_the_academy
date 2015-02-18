@@ -15,7 +15,6 @@ def timefunc(f):
 		return result
 	return f_timer
 
-@timefunc
 def get_csv_data():
 	"""Returns an array of arrays of all speech data."""
 
@@ -28,7 +27,6 @@ def get_csv_data():
 				speeches.append([unicode(cell, errors='ignore') for cell in row])
 	return speeches
 
-@timefunc
 def get_only_speeches(speech_data):
 	"""Returns an array of only the speeches from the csv data."""
 
