@@ -34,6 +34,7 @@ for row in full_data:
 actors = filter(lambda row: row[8] == 'Actor in a Leading Role', full_data)
 
 avg_by_year = get_average_by_year(full_data)
+filtered_data = get_filtered_data(full_data)
 
 ### Routing ###
 

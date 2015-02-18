@@ -149,7 +149,7 @@ function drawBarGraph(data, div_name) {
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(5)
+        .ticks(10)
         .tickFormat(d3.format(""));
 
     var yAxis = d3.svg.axis()
@@ -160,7 +160,7 @@ function drawBarGraph(data, div_name) {
     var x0Axis = d3.svg.axis()
         .scale(x0)
         .orient("bottom")
-        .ticks(5)
+        .ticks(10)
         .tickFormat(d3.format(""));
 
     svg.append("g")
@@ -191,11 +191,6 @@ function drawBarGraph(data, div_name) {
         });
 
     d3.select("#sort_checkbox").on("change", change);
-
-    var sortTimeout = setTimeout(function() {
-        d3.select("#sort_checkbox").property("checked", true).each(change); 
-    }, 2000);
-
 
         function change() {
 

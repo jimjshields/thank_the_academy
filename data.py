@@ -60,6 +60,11 @@ def get_average_by_year(speech_data_w_lengths):
 
 	return new_avg_by_year
 
+def get_filtered_data(speech_data_w_lengths, filter):
+	"""Returns the dataset filtered for a list of parameters for category."""
+
+	return filter(lambda row: row[8] in filter, speech_data_w_lengths)
+
 def get_presenter_count(speech_data_w_lengths):
 	"""Returns an array of arrays of presenters and count."""
 
