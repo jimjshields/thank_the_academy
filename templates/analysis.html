@@ -46,6 +46,19 @@ button:hover {
 	background-color: #F5DE2B;
 }
 
+#speech_length {
+    display: inline;
+}
+
+#speech_length > button {
+    display: inline;
+    font-size: 14px;
+    /*margin-bottom: 0px;*/
+    padding: 3px;
+    width: 75px;
+    height: 60px;
+}
+
 p {
 	font-size: 16px;
 }
@@ -66,6 +79,10 @@ label > input {
     flex-grow: 1;
 }
 
+ul {
+    text-decoration: none;
+}
+
 </style>
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
@@ -74,7 +91,9 @@ label > input {
 <button id="speech_length_header">Oscar Speech Length (words) by Year</button>
 	<div id="speech_length_viz">
 	<div id="speech_length">
+        <button id="unfilter">Unfliter</button>
         <label>Sort by length<input type="checkbox" id="sort_checkbox"></label>
+
     </div>
 	<div id="tooltip">
 		<p><b>Winner:</b> <span id="winner"></span></p>
@@ -108,6 +127,16 @@ $("#speech_button").click(function() {
 	$("#speech").slideToggle();
 });
 
+$("#award").click(function() {
+    var category = $("#award").text()
+    var filtered_data = full_data.filter(function(d) { return d[8] == category })
+    drawBarGraph(filtered_data)
+});
+
+$("#unfilter").click(function() {
+    drawBarGraph(full_data)
+});
+
 $("#speech_length_header").click(function() {
 	$("#speech_length_viz").slideToggle();
 	$("#avg_speech_length_header").slideToggle();
@@ -118,18 +147,27 @@ $("#avg_speech_length_header").click(function() {
 	$("#speech_length_header").slideToggle();
 });
 
-function drawBarGraph(data, div_name) {
+var margin = {top: 10, right: 20, bottom: 30, left: 80};
+var width = 1300 - margin.left - margin.right;
+var height = 400 - margin.top - margin.bottom;
+var barPadding = 0.5;
 
-    var margin = {top: 10, right: 20, bottom: 30, left: 80};
-    var width = 1300 - margin.left - margin.right;
-    var height = 400 - margin.top - margin.bottom;
-    var barPadding = 0.5;
+var svg_length = d3.select("#speech_length").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var svg = d3.select("#speech_length").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var svg_avg = d3.select("#avg_speech_length").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+function drawBarGraph(data) {
+
+    svg_length.selectAll("*").remove();
 
     var x = d3.time.scale()
         .range([0, width]);
@@ -163,16 +201,16 @@ function drawBarGraph(data, div_name) {
         .ticks(10)
         .tickFormat(d3.format(""));
 
-    svg.append("g")
+    svg_length.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append("g")
+    svg_length.append("g")
         .attr("class", "y axis")
         .call(yAxis);
 
-    svg.selectAll(".bar")
+    svg_length.selectAll(".bar")
         .data(data)
             .sort(function(a, b) { return d3.descending(a[10], b[10])})
         .enter().append("rect")
@@ -194,7 +232,7 @@ function drawBarGraph(data, div_name) {
 
         function change() {
 
-            var transition = svg.transition().duration(50),
+            var transition = svg_length.transition().duration(50),
                 delay = function(d, i) { return i/2; };
 
             transition.selectAll(".bar")
@@ -215,18 +253,7 @@ function drawBarGraph(data, div_name) {
         };
 };
 
-function drawAvgBarGraph(data, div_name) {
-
-    var margin = {top: 10, right: 20, bottom: 30, left: 80};
-    var width = 1300 - margin.left - margin.right;
-    var height = 400 - margin.top - margin.bottom;
-    var barPadding = 0.5;
-
-    var svg = d3.select("#avg_speech_length").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+function drawAvgBarGraph(data) {
 
     var x = d3.time.scale()
         .range([0, width]);
@@ -250,16 +277,16 @@ function drawAvgBarGraph(data, div_name) {
         .orient("left")
         .ticks(10);
 
-    svg.append("g")
+    svg_avg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    svg.append("g")
+    svg_avg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
 
-    svg.selectAll(".bar")
+    svg_avg.selectAll(".bar")
         .data(data)
         .enter().append("rect")
         .attr("class", "bar")

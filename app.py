@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, get_average_by_year, get_presenter_count
+from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, get_average_by_year, get_presenter_count, get_filtered_data
 
 app = Flask(__name__)
 
@@ -34,7 +34,9 @@ for row in full_data:
 actors = filter(lambda row: row[8] == 'Actor in a Leading Role', full_data)
 
 avg_by_year = get_average_by_year(full_data)
-filtered_data = get_filtered_data(full_data)
+
+selected_categories = ['Actress in a Supporting Role', 'Actress in a Supporting Role']
+filtered_data = get_filtered_data(full_data, selected_categories)
 
 ### Routing ###
 
@@ -62,7 +64,7 @@ def about():
 def analysis():
 	"""Returns the analysis page."""
 
-	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year)
+	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, filtered_data=filtered_data)
 
 if __name__ == '__main__':
 	app.run(debug=True)
