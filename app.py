@@ -7,7 +7,7 @@ app = Flask(__name__)
 def create_markov_gen(all_speeches):
 	"""Returns a markov generator for a given word count and n-gram."""
 
-	markov_gen = MarkovGenerator(all_speeches, 1500, 2)
+	markov_gen = MarkovGenerator(all_speeches, 750, 3)
 	return markov_gen
 
 def generate_markov_words(markov_gen):
