@@ -24,7 +24,7 @@ class MarkovGenerator(object):
         text = self.text
         ngram = self.ngram
         words = text
-        # words = word_tokenize(text)
+        words = word_tokenize(text)
         zippy_words = zip(*[words[i:] for i in xrange(ngram + 1)])
         markov_dict = defaultdict(Counter)
         for t in zippy_words:
