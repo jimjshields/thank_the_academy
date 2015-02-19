@@ -1,4 +1,5 @@
 import time, csv
+from memory_profiler import profile
 
 ### Utility function for profiling ###
 
@@ -24,7 +25,7 @@ def get_csv_data():
 		for row in data:
 			# FIX: There has to be a better way to deal with non-ASCII characters.
 			if row[0] != 'Year':
-				speeches.append([unicode(cell, errors='ignore') for cell in row])
+				speeches.append([unicode(cell, errors='ignore') for cell in row] + [get_speech_length(row[6])])
 	return speeches
 
 def get_only_speeches(speech_data):
@@ -36,8 +37,7 @@ def get_only_speeches(speech_data):
 def get_speech_length(speech):
 	"""Returns the length of a speech in words."""
 
-	words = speech.split(' ')
-	return len(words)
+	return len(speech.split(' '))
 
 def get_average_by_year(speech_data_w_lengths):
 	"""Returns the average length of a speech in words per year."""

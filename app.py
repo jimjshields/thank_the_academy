@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
 from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, get_average_by_year, get_presenter_count, get_filtered_data
+from memory_profiler import profile
 
 app = Flask(__name__)
 
@@ -17,15 +18,15 @@ def generate_markov_words(markov_gen):
 	return new_speech
 
 # Only do all of this the first time the page is open.
-speech_data = get_csv_data()
+speech_data = (get_csv_data())
 only_speeches = get_only_speeches(speech_data)
 all_speeches = ' '.join(only_speeches)
 markov_gen = create_markov_gen(all_speeches)
 
 full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', speech_data))
 
-for row in full_data:
-	row.append(get_speech_length(row[6]))
+# for row in full_data:
+# 	row.append(get_speech_length(row[6]))
 
 # avg_by_year = get_average_by_year(full_data)
 
