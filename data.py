@@ -1,5 +1,4 @@
 import time, csv
-from memory_profiler import profile
 
 ### Utility function for profiling ###
 

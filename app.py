@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
 from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, get_average_by_year, get_presenter_count, get_filtered_data
-from memory_profiler import profile
 
 app = Flask(__name__)
 
