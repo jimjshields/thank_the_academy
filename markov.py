@@ -1,3 +1,5 @@
+import nltk
+nltk.download('punkt')
 from nltk import word_tokenize
 from collections import defaultdict, Counter
 from sys import argv
