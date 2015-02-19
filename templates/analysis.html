@@ -63,11 +63,11 @@ p {
 	font-size: 16px;
 }
 
-#sort_checkbox, #non_honorary_checkbox {
+#sort_checkbox, #non_honorary_checkbox, #avg_non_honorary_checkbox {
     height: 15px;
 }
 
-#options {
+.options {
     width: 800px;
     font-size: 16px;
     position: absolute;
@@ -91,7 +91,7 @@ ul {
 <button id="speech_length_header">Oscar Speech Length (words) by Year</button>
 	<div id="speech_length_viz">
 	<div id="speech_length">
-        <div id="options">
+        <div class="options">
             <label>Sort by length<input type="checkbox" id="sort_checkbox"></label>
             <label>Include Honorary Awards<input type="checkbox" id="non_honorary_checkbox"></label>
             <button id="unfilter">Unfilter</button>
@@ -114,6 +114,9 @@ ul {
 <button id="avg_speech_length_header">Average Speech Length (words) by Year</button>
     <div id="avg_speech_length_viz">
         <div id="avg_speech_length">
+            <div class="options">
+            <label>Include Honorary Awards<input type="checkbox" id="avg_non_honorary_checkbox"></label>
+        </div>
         </div>
     </div>
 
@@ -128,6 +131,7 @@ ul {
 var full_data = {{ full_data|tojson|safe }}
 var non_honorary_data = {{ non_honorary|tojson|safe }}
 var avg_by_year = {{ avg_by_year|tojson|safe }}
+var avg_by_year_full = {{ avg_by_year_full|tojson|safe }}
 var avg_by_category = {{ avg_by_category|tojson|safe }}
 
 $("#speech_button").click(function() {
@@ -182,7 +186,12 @@ function filter_out_honorary() {
     this.checked ? drawBarGraph(full_data) : drawBarGraph(non_honorary_data)
 }
 
+function filter_out_honorary_avg() {
+    this.checked ? drawAvgBarGraph(avg_by_year_full) : drawAvgBarGraph(avg_by_year)
+}
+
 d3.select("#non_honorary_checkbox").on("change", filter_out_honorary);
+d3.select("#avg_non_honorary_checkbox").on("change", filter_out_honorary_avg);
 
 drawBarGraph(non_honorary_data);
 drawAvgBarGraph(avg_by_year);
@@ -276,6 +285,7 @@ function drawBarGraph(data) {
 
 function drawAvgBarGraph(data) {
 
+    svg_avg.selectAll("*").remove();
     var x = d3.time.scale()
         .range([0, width]);
 
