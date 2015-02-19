@@ -23,7 +23,7 @@ markov_gen = create_markov_gen(all_speeches)
 
 full_data = filter(lambda row: int(row[7]) >= 1966,  get_csv_data()) 
 non_honorary = filter(lambda row: row[8] != 'Honorary Award', full_data)
-avg_by_year = get_average(full_data, 7)
+avg_by_year = get_average(non_honorary, 7)
 avg_by_category = get_average(full_data, 8)
 
 
@@ -53,7 +53,7 @@ def about():
 def analysis():
 	"""Returns the analysis page."""
 
-	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, non_honorary=non_honorary)
+	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, non_honorary=non_honorary, avg_by_category=avg_by_category)
 
 if __name__ == '__main__':
 	app.run(debug=True)
