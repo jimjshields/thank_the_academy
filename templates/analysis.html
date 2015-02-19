@@ -27,7 +27,7 @@
 	display: none;
 }
 
-#speech, #hide, #speech_length_viz, #avg_speech_length_viz {
+#speech, #hide, #speech_length_viz, #avg_speech_length_viz, #link {
 	display: none;
 }
 
@@ -108,19 +108,13 @@ ul {
 	  	<p><b>Year:</b> <span id="year"></span></p>
 	  	<p><b>Award:</b> <span id="award"></span> (click to filter)</p>
 	  	<p><b>Movie:</b> <span id="movie"></span></p>
-	  	<p id="speech_button"><b>Speech (click to <span id="show"><b>show</b></span><span id="hide"><b>hide</b></span>):</b><span id="speech"></span></p>
+	  	<p id="speech_button"><b>Speech (click to <span id="show"><b>show</b></span><span id="hide"><b>hide</b></span>):</b>
+            <span id="speech"></span>
+            <a id="link" href="">Click to View at Oscar Database</a>
+        </p>
 	</div>
 	</div>
-
-<!-- <button id="avg_speech_length_header">Avg. Speech Length (words) by Year</button>
-	<div id="avg_speech_length_viz">
-	<div id="avg_speech_length"></div>
-	<div id="avg_tooltip">
-		<p><b>Year:</b> <span id="avg_year"></span></p>
-		<p><b>Avg. speech length (words):</b> <span id="avg_length"></span></p>
-	</div>
-	</div> -->
-
+    
 <script>
 
 var full_data = {{ full_data|tojson|safe }}
@@ -131,6 +125,7 @@ $("#speech_button").click(function() {
 	$("#hide").toggle();
 	$("#speech_length").slideToggle();
 	$("#speech").slideToggle();
+    $("#link").slideToggle();
 });
 
 $("#award").click(function() {
@@ -187,8 +182,8 @@ function drawBarGraph(data) {
     console.log(data)
 
     x.domain(d3.extent(data, function(d) { return +d[9]; }));
-    x0.domain(d3.extent(data, function(d) { return d[10]; }));
-    y.domain([0, d3.max(data, function(d) { return d[10]; })]);
+    x0.domain(d3.extent(data, function(d) { return d[11]; }));
+    y.domain([0, d3.max(data, function(d) { return d[11]; })]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -218,20 +213,21 @@ function drawBarGraph(data) {
 
     svg_length.selectAll(".bar")
         .data(data)
-            .sort(function(a, b) { return d3.descending(a[10], b[10])})
+            .sort(function(a, b) { return d3.descending(a[11], b[11])})
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(+d[9]); })
         .attr("width", (width / data.length))
-        .attr("y", function(d) { return y(d[10]); })
-        .attr("height", function(d) { return height - y(d[10]); })
+        .attr("y", function(d) { return y(d[11]); })
+        .attr("height", function(d) { return height - y(d[11]); })
         .on("mousemove", function(d) {
         	$("#winner").text(d[3])
-        	$("#length").text(d[10])
+        	$("#length").text(d[11])
         	$("#year").text(d[7])
         	$("#award").text(d[8])
         	$("#movie").text(d[2])
         	$("#speech").text(d[6])
+            $("#link").attr("href", (d[10]))
         });
 
     d3.select("#sort_checkbox").on("change", change);
@@ -244,7 +240,7 @@ function drawBarGraph(data) {
             transition.selectAll(".bar")
                 .delay(delay)
                 .attr("x", this.checked
-                ? function(d) { return x0(d[10]); }
+                ? function(d) { return x0(d[11]); }
                 : function(d) { return x(d[9]); })
                 .attr("width", width/data.length)
 
