@@ -15,28 +15,25 @@ def timefunc(f):
 		return result
 	return f_timer
 
-def get_csv_data():
-	"""Returns an array of arrays of all speech data."""
+def get_speech_length(speech):
+	"""Returns the length of a speech in words."""
 
-	speeches = []
+	return len(speech.split(' '))
+
+def get_csv_data():
+	"""Returns a generator of arrays of all speech data."""
+
 	with open('speeches.csv', 'rU') as csv_file:
 		data = csv.reader(csv_file)
 		for row in data:
 			# FIX: There has to be a better way to deal with non-ASCII characters.
 			if row[0] != 'Year':
-				speeches.append([unicode(cell, errors='ignore') for cell in row] + [get_speech_length(row[6])])
-	return speeches
+				yield [unicode(cell, errors='ignore') for cell in row] + [get_speech_length(row[6])]
 
 def get_only_speeches(speech_data):
-	"""Returns an array of only the speeches from the csv data."""
+	"""Returns a generator of only the speeches from the csv data."""
 
-	only_speeches = map(lambda speech: speech[6], speech_data)
-	return only_speeches
-
-def get_speech_length(speech):
-	"""Returns the length of a speech in words."""
-
-	return len(speech.split(' '))
+	return (speech[6] for speech in speech_data)
 
 def get_average_by_year(speech_data_w_lengths):
 	"""Returns the average length of a speech in words per year."""

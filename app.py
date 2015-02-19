@@ -17,17 +17,10 @@ def generate_markov_words(markov_gen):
 	return new_speech
 
 # Only do all of this the first time the page is open.
-speech_data = (get_csv_data())
-only_speeches = get_only_speeches(speech_data)
-all_speeches = ' '.join(only_speeches)
+all_speeches = ' '.join(get_only_speeches(get_csv_data()))
 markov_gen = create_markov_gen(all_speeches)
 
-full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', speech_data))
-
-# for row in full_data:
-# 	row.append(get_speech_length(row[6]))
-
-# avg_by_year = get_average_by_year(full_data)
+full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', get_csv_data()))
 
 ### Routing ###
 
