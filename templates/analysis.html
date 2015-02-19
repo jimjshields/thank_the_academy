@@ -63,21 +63,16 @@ p {
 	font-size: 16px;
 }
 
-#sort_checkbox {
+#sort_checkbox, #non_honorary_checkbox {
     height: 15px;
 }
 
 #options {
     width: 800px;
     font-size: 16px;
-}
-
-label {
     position: absolute;
     display: flex;
-    width: 175px;
     left: 250px;
-    flex-grow: 4;
 }
 
 label > input {
@@ -98,7 +93,8 @@ ul {
 	<div id="speech_length">
         <div id="options">
             <label>Sort by length<input type="checkbox" id="sort_checkbox"></label>
-            <button id="unfilter">Unfliter</button>
+            <label>Include Honorary Awards<input type="checkbox" id="non_honorary_checkbox"></label>
+            <button id="unfilter">Unfilter</button>
         </div>
 
     </div>
@@ -114,10 +110,24 @@ ul {
         </p>
 	</div>
 	</div>
+
+<button id="avg_speech_length_header">Average Speech Length (words) by Year</button>
+    <div id="avg_speech_length_viz">
+        <div id="avg_speech_length">
+        </div>
+    </div>
+
+<button id="avg_category_length_header">Average Speech Length (words) by Category</button>
+    <div id="avg_category_length_viz">
+        <div id="avg_category_length">
+        </div>
+    </div>
     
 <script>
 
 var full_data = {{ full_data|tojson|safe }}
+var non_honorary_data = {{ non_honorary|tojson|safe }}
+var avg_by_year = {{ avg_by_year|tojson|safe }}
 
 $("#speech_button").click(function() {
 	$("#speech_length_header").slideToggle();
@@ -165,6 +175,14 @@ var svg_avg = d3.select("#avg_speech_length").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+function filter_out_honorary() {
+    this.checked ? drawBarGraph(full_data) : drawBarGraph(non_honorary_data)
+}
+
+d3.select("#non_honorary_checkbox").on("change", filter_out_honorary);
+
+drawBarGraph(non_honorary_data);
+drawAvgBarGraph(avg_by_year)
 
 function drawBarGraph(data) {
 
@@ -253,55 +271,52 @@ function drawBarGraph(data) {
         };
 };
 
-// function drawAvgBarGraph(data) {
+function drawAvgBarGraph(data) {
 
-//     var x = d3.time.scale()
-//         .range([0, width]);
+    var x = d3.time.scale()
+        .range([0, width]);
 
-//     var y = d3.scale.linear()
-//         .range([height, 0]);
+    var y = d3.scale.linear()
+        .range([height, 0]);
 
-//     console.log(data)
+    console.log(data)
 
-//     x.domain(d3.extent(data, function(d) { return d[0]; }));
-//     y.domain([0, d3.max(data, function(d) { return d[1]; })]);
+    x.domain(d3.extent(data, function(d) { return d[0]; }));
+    y.domain([0, d3.max(data, function(d) { return d[1]; })]);
 
-//     var xAxis = d3.svg.axis()
-//         .scale(x)
-//         .orient("bottom")
-//         .ticks(5)
-//         .tickFormat(d3.format(""));
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(5)
+        .tickFormat(d3.format(""));
 
-//     var yAxis = d3.svg.axis()
-//         .scale(y)
-//         .orient("left")
-//         .ticks(10);
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
 
-//     svg_avg.append("g")
-//         .attr("class", "x axis")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(xAxis);
+    svg_avg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-//     svg_avg.append("g")
-//         .attr("class", "y axis")
-//         .call(yAxis);
+    svg_avg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
 
-//     svg_avg.selectAll(".bar")
-//         .data(data)
-//         .enter().append("rect")
-//         .attr("class", "bar")
-//         .attr("x", function(d) { return x(+d[0]); })
-//         .attr("width", (width / data.length))
-//         .attr("y", function(d) { return y(d[1]); })
-//         .attr("height", function(d) { return height - y(d[1]); })
-//         .on("mousemove", function(d) {
-//         	$("#avg_year").text(d[0])
-//         	$("#avg_length").text(d[1])
-//         });
-// };
-
-drawBarGraph(full_data);
-// drawAvgBarGraph(avg_by_year)
+    svg_avg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(+d[0]); })
+        .attr("width", (width / data.length))
+        .attr("y", function(d) { return y(d[1]); })
+        .attr("height", function(d) { return height - y(d[1]); })
+        .on("mousemove", function(d) {
+        	$("#avg_year").text(d[0])
+        	$("#avg_length").text(d[1])
+        });
+};
 
 </script>
 

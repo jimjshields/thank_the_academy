@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-from data import timefunc, get_csv_data, get_only_speeches, get_average_by_year, get_presenter_count, get_filtered_data
+from data import timefunc, get_csv_data, get_only_speeches, get_average, get_presenter_count, get_filtered_data
 
 app = Flask(__name__)
 
@@ -21,7 +21,11 @@ def generate_markov_words(markov_gen):
 all_speeches = ' '.join(get_only_speeches(get_csv_data()))
 markov_gen = create_markov_gen(all_speeches)
 
-full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', get_csv_data()))
+full_data = filter(lambda row: int(row[7]) >= 1966,  get_csv_data()) 
+non_honorary = filter(lambda row: row[8] != 'Honorary Award', full_data)
+avg_by_year = get_average(full_data, 7)
+avg_by_category = get_average(full_data, 8)
+
 
 ### Routing ###
 
@@ -49,7 +53,7 @@ def about():
 def analysis():
 	"""Returns the analysis page."""
 
-	return render_template('analysis.html', full_data=full_data)
+	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, non_honorary=non_honorary)
 
 if __name__ == '__main__':
 	app.run(debug=True)

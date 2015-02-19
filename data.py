@@ -30,24 +30,24 @@ def get_only_speeches(speech_data):
 
 	return (speech[6] for speech in speech_data)
 
-def get_average_by_year(speech_data_w_lengths):
+def get_average(speech_data_w_lengths, column_num):
 	"""Returns the average length of a speech in words per year."""
 
-	avg_by_year = {}
+	avg = {}
 
 	for row in speech_data_w_lengths:
-		if row[7] not in avg_by_year:
-			avg_by_year[row[7]] = [row[10], 1]
+		if row[column_num] not in avg:
+			avg[row[column_num]] = [row[11], 1]
 		else:
-			avg_by_year[row[7]][0] += row[10]
-			avg_by_year[row[7]][1] += 1
+			avg[row[column_num]][0] += row[11]
+			avg[row[column_num]][1] += 1
 
-	new_avg_by_year = []
+	new_avg = []
 
-	for year in avg_by_year:
-		new_avg_by_year.append([year, avg_by_year[year][0]/avg_by_year[year][1]])
+	for i in avg:
+		new_avg.append([i, avg[i][0]/avg[i][1]])
 
-	return new_avg_by_year
+	return new_avg
 
 def get_filtered_data(speech_data_w_lengths, selected_categories):
 	"""Returns the dataset filtered for a list of parameters for category."""
@@ -75,10 +75,3 @@ def get_presenter_count(speech_data_w_lengths):
 	ranked_presenters.sort(key=lambda x: x[1], reverse=True)
 
 	return ranked_presenters
-
-
-
-# longest = sorted(full_data, key=lambda row: row[9], reverse=True)[:10]
-
-# for row in longest:
-# 	print '{} - {} - {} - {} words'.format(row[3], row[1], row[2], row[9])
