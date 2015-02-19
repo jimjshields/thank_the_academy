@@ -15,11 +15,6 @@ def timefunc(f):
 		return result
 	return f_timer
 
-# def get_speech_length(speech):
-# 	"""Returns the length of a speech in words."""
-
-# 	return len(speech.split(' '))
-
 def get_csv_data():
 	"""Returns a generator of arrays of all speech data."""
 
