@@ -15,10 +15,10 @@ def timefunc(f):
 		return result
 	return f_timer
 
-def get_speech_length(speech):
-	"""Returns the length of a speech in words."""
+# def get_speech_length(speech):
+# 	"""Returns the length of a speech in words."""
 
-	return len(speech.split(' '))
+# 	return len(speech.split(' '))
 
 def get_csv_data():
 	"""Returns a generator of arrays of all speech data."""
@@ -28,7 +28,7 @@ def get_csv_data():
 		for row in data:
 			# FIX: There has to be a better way to deal with non-ASCII characters.
 			if row[0] != 'Year':
-				yield [unicode(cell, errors='ignore') for cell in row] + [get_speech_length(row[6])]
+				yield [unicode(cell, errors='ignore') for cell in row] + [len(row[6].split(' '))]
 
 def get_only_speeches(speech_data):
 	"""Returns a generator of only the speeches from the csv data."""

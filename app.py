@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from markov import MarkovGenerator
-from data import timefunc, get_csv_data, get_only_speeches, get_speech_length, get_average_by_year, get_presenter_count, get_filtered_data
+from data import timefunc, get_csv_data, get_only_speeches, get_average_by_year, get_presenter_count, get_filtered_data
 
 app = Flask(__name__)
 
@@ -18,7 +18,7 @@ def generate_markov_words(markov_gen):
 
 # Only do all of this the first time the page is open.
 all_speeches = ' '.join(get_only_speeches(get_csv_data()))
-markov_gen = create_markov_gen(all_speeches)
+# markov_gen = create_markov_gen(all_speeches)
 
 full_data = filter(lambda row: int(row[7]) >= 1966, filter(lambda row: row[8] != 'Honorary Award', get_csv_data()))
 
@@ -29,7 +29,8 @@ def index():
 	"""Returns the landing page, to which you're redirected every time you
 	   click the button."""
 
-	new_speech = generate_markov_words(markov_gen)
+	# new_speech = generate_markov_words(markov_gen)
+	new_speech = ''
 	return render_template('index.html', speech=new_speech)
 
 @app.route('/make_speech', methods=['POST', 'GET'])
