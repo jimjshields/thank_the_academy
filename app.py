@@ -57,4 +57,4 @@ def analysis():
 	return render_template('analysis.html', full_data=full_data, avg_by_year=avg_by_year, non_honorary=non_honorary, avg_by_category=avg_by_category, avg_by_year_full=avg_by_year_full)
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=False)
