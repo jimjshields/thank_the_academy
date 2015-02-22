@@ -54,6 +54,10 @@
 		margin-top: 10px;
 	}
 
+	.fb-share-button {
+		margin-top: 13px;
+	}
+
 </style>
 
 <script>
@@ -69,6 +73,14 @@
 </head>
 
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 <div class="outer">
 	<div class="inner">
@@ -84,14 +96,13 @@
 
 <nav class="navbar navbar-default navbar-fixed-bottom">
   <div class="container">
-    <ul class="nav navbar-nav">
     	{% block footer %}
+    	<ul class="nav navbar-nav">
 	        <li class="active"><a href="#">Thank The Academy<span class="sr-only">(current)</span></a></li>
 	        <li><a href="/analysis">Analysis<span class="sr-only"></span></a></li>
 	        <li><a href="/about">About</a></li>
 	        <li><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
 	        <li><a href="https://twitter.com/shieldsofdreams">Twitter</a></li>
-	    {% endblock %}
       </ul>
      <ul class="nav navbar-nav navbar-right">
      	<li><a class="twitter-share-button"
@@ -102,7 +113,10 @@
 		<script>
 		window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
 		</script></li>
+		<li>
+		<li><div class="fb-share-button" data-href="http://thanktheacademy.herokuapp.com/" data-layout="button_count"></div></li>
 		</ul>
+		{% endblock %}
   </div>
 </nav>
 </body>

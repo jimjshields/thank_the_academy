@@ -336,9 +336,24 @@ function drawAvgBarGraph(data) {
 {% endblock %}
 
 {% block footer %}
+<ul class="nav navbar-nav">
 	<li><a href="/">Thank The Academy</a></li>
 	<li class="active"><a href="/analysis">Analysis<span class="sr-only">(current)</span></a></li>
 	<li><a href="/about">About</a></li>
     <li><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
     <li><a href="https://twitter.com/shieldsofdreams">Twitter</a></li>
+</ul>
+     <ul class="nav navbar-nav navbar-right">
+        <li><a class="twitter-share-button"
+          href="https://twitter.com/share"
+          data-size="large">
+        Tweet
+        </a>
+        <script>
+        window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+        </script></li>
+        <li>
+        <li><div class="fb-share-button" data-href="http://thanktheacademy.herokuapp.com/analysis" data-layout="button_count"></div></li>
+        </ul>
+
 {% endblock %}
