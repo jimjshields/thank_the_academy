@@ -50,6 +50,10 @@
 		font-weight: bold;
 	}
 
+	.twitter-share-button {
+		margin-top: 10px;
+	}
+
 </style>
 
 <script>
@@ -89,6 +93,16 @@
 	        <li><a href="https://twitter.com/shieldsofdreams">Twitter</a></li>
 	    {% endblock %}
       </ul>
+     <ul class="nav navbar-nav navbar-right">
+     	<li><a class="twitter-share-button"
+		  href="https://twitter.com/share"
+		  data-size="large">
+		Tweet
+		</a>
+		<script>
+		window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+		</script></li>
+		</ul>
   </div>
 </nav>
 </body>
