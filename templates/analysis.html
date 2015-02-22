@@ -1,89 +1,12 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+<link rel="stylesheet" type="text/css" href="/static/analysis.css">
+
+{% endblock %}
+
 {% block content %}
-
-
-<style>
-
-.bar {
-	fill: steelblue;
-}
-
-.bar:hover {
-	fill: #b29254;
-}
-
-.axis {
-	font-size: 18px;
-}
-
-.axis path {
-	display: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
-}
-
-.x.axis path {
-	display: none;
-}
-
-#speech, #hide, #speech_length_viz, #avg_speech_length_viz, #link {
-	display: none;
-}
-
-button {
-	font-size: 25px;
-	display: block;
-	margin: 0 auto;
-	margin-bottom: 10px;
-	border-radius: 5px;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	padding: 10px;
-	background-color: #b29254;
-}
-
-button:hover {
-	background-color: #F5DE2B;
-}
-
-#speech_length {
-    display: inline;
-}
-
-#speech_length > button {
-    display: inline;
-    font-size: 14px;
-    /*margin-bottom: 0px;*/
-    padding: 3px;
-    width: 75px;
-    height: 60px;
-}
-
-p {
-	font-size: 16px;
-}
-
-#sort_checkbox, #non_honorary_checkbox, #avg_non_honorary_checkbox {
-    height: 15px;
-}
-
-.options {
-    width: 800px;
-    font-size: 16px;
-    position: absolute;
-    display: flex;
-    left: 250px;
-}
-
-label > input {
-    flex-grow: 1;
-}
-
-ul {
-    text-decoration: none;
-}
-
-</style>
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
