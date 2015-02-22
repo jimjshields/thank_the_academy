@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="/static/base.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<script>
 		
 		// Google Analytics code
@@ -54,11 +55,11 @@
 <nav class="navbar navbar-default navbar-fixed-bottom">
 	<div class="container">
 		<ul class="nav navbar-nav">
-		    <li><a href="/">Thank The Academy<span class="sr-only">(current)</span></a></li>
-		    <li><a href="/analysis">Analysis<span class="sr-only"></span></a></li>
-		    <li><a href="/about">About</a></li>
-		    <li><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
-		    <li><a href="https://twitter.com/shieldsofdreams">Twitter</a></li>
+		    <li id="index"><a href="/">Thank The Academy</a></li>
+		    <li id="analysis"><a href="/analysis">Analysis</a></li>
+		    <li id="about"><a href="/about">About</a></li>
+		    <li id="github"><a href="https://github.com/jimjshields/thank_the_academy">GitHub</a></li>
+		    <li id="twitter"><a href="https://twitter.com/shieldsofdreams">Twitter</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li>
@@ -73,6 +74,10 @@
 		</ul>
 	</div>
 </nav>
+
+{% endblock %}
+
+{% block script %}
 
 {% endblock %}
 
