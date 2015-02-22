@@ -13,8 +13,12 @@ $("#award").click(function() {
     drawBarGraph(filtered_data)
 });
 
+$("").click(function() {
+    console.log('hello')
+})
+
 $("#unfilter").click(function() {
-    drawBarGraph(full_data)
+    drawBarGraph(non_honorary_data)
 });
 
 $("#speech_length_header").click(function() {
@@ -31,7 +35,7 @@ $("#avg_speech_length_header").click(function() {
 
 var margin = {top: 10, right: 20, bottom: 30, left: 80};
 var width = 1300 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;
+var height = 450 - margin.top - margin.bottom;
 var barPadding = 0.5;
 
 var svg_length = d3.select("#speech_length").append("svg")
@@ -45,6 +49,14 @@ var svg_avg = d3.select("#avg_speech_length").append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var all_categories = []
+
+for(i=0;i<full_data.length;i++) {
+    if(all_categories.indexOf(full_data[i][8]) === -1) {
+        all_categories.push(full_data[i][8]);
+    }
+};
 
 function filter_out_honorary() {
     this.checked ? drawBarGraph(full_data) : drawBarGraph(non_honorary_data)
@@ -126,20 +138,20 @@ function drawBarGraph(data) {
         	$("#speech").text(d[6])
             $("#link").attr("href", (d[10]))
         });
-
+    
     var legendRectSize = 14;
     var legendSpacing = 2;
 
     var legend = svg_length.selectAll(".legend")
-        .data(color.domain())
+        .data(all_categories)
         .enter()
         .append("g")
         .attr("class", "legend")
         .attr("transform", function(d, i) {
             var height = legendRectSize + legendSpacing;
-            var offset = height * color.domain().length / 2;
+            var offset = height * all_categories.length / 2;
             var horz = 1000;
-            var vert = i * height - offset + 190;
+            var vert = i * height - offset + 200;
             return "translate(" + horz + "," + vert + ")";
         });
 
@@ -175,6 +187,8 @@ function drawBarGraph(data) {
               .selectAll("g")
                 .delay(delay);
         };
+
+    filter_graph()
 };
 
 function drawAvgBarGraph(data) {
@@ -223,4 +237,23 @@ function drawAvgBarGraph(data) {
         	$("#avg_year").text(d[0])
         	$("#avg_length").text(d[1])
         });
+};
+
+function filter_graph() {
+
+    var category_filters = [];
+    var legend = svg_length.selectAll(".legend")
+
+    legend.on("click", function(d) {
+        console.log("clicked")
+        var index = category_filters.indexOf(d)
+        if(index > -1) {
+            category_filters.splice(index, 1)
+        } else {
+            category_filters.push(d)
+        }
+        var filtered_data = full_data.filter(function(d) { return category_filters.indexOf(d[8]) > -1 })
+        console.log(category_filters)
+        drawBarGraph(filtered_data)
+    });
 };
