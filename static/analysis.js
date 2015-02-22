@@ -108,6 +108,12 @@ function drawBarGraph(data) {
 
     var color = d3.scale.category20c();
 
+    if(data.length < 100) {
+        var bar_width = width / data.length / 2
+    } else {
+        var bar_width = width / data.length
+    }
+
     svg_length.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -123,7 +129,7 @@ function drawBarGraph(data) {
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(+d[9]); })
-        .attr("width", (width / data.length))
+        .attr("width", (bar_width))
         .attr("y", function(d) { return y(d[11]); })
         .attr("height", function(d) { return height - y(d[11]); })
         .attr('fill', function(d) { 
