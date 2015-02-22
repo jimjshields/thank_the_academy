@@ -1,9 +1,13 @@
-.bar {
+#avg_speech_length_viz .bar {
 	fill: steelblue;
 }
 
 .bar:hover {
 	fill: #b29254;
+}
+
+.legend {
+	font-size: 12px;
 }
 
 .axis {

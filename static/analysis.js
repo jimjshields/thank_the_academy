@@ -65,15 +65,13 @@ function drawBarGraph(data) {
     svg_length.selectAll("*").remove();
 
     var x = d3.time.scale()
-        .range([0, width]);
+        .range([0, width - 250]);
 
     var x0 = d3.time.scale()
-        .range([0, width]);
+        .range([0, width - 250]);
 
     var y = d3.scale.linear()
         .range([height, 0]);
-
-    console.log(data)
 
     x.domain(d3.extent(data, function(d) { return +d[9]; }));
     x0.domain(d3.extent(data, function(d) { return d[11]; }));
@@ -96,6 +94,8 @@ function drawBarGraph(data) {
         .ticks(10)
         .tickFormat(d3.format(""));
 
+    var color = d3.scale.category20c();
+
     svg_length.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -114,6 +114,9 @@ function drawBarGraph(data) {
         .attr("width", (width / data.length))
         .attr("y", function(d) { return y(d[11]); })
         .attr("height", function(d) { return height - y(d[11]); })
+        .attr('fill', function(d) { 
+            return color(d[8])
+        })
         .on("mousemove", function(d) {
         	$("#winner").text(d[3])
         	$("#length").text(d[11])
@@ -123,6 +126,33 @@ function drawBarGraph(data) {
         	$("#speech").text(d[6])
             $("#link").attr("href", (d[10]))
         });
+
+    var legendRectSize = 14;
+    var legendSpacing = 2;
+
+    var legend = svg_length.selectAll(".legend")
+        .data(color.domain())
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset = height * color.domain().length / 2;
+            var horz = 1000;
+            var vert = i * height - offset + 190;
+            return "translate(" + horz + "," + vert + ")";
+        });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
 
     d3.select("#sort_checkbox").on("change", change);
 
