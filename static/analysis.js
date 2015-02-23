@@ -13,10 +13,6 @@ $("#award").click(function() {
     drawBarGraph(filtered_data)
 });
 
-$("").click(function() {
-    console.log('hello')
-})
-
 $("#unfilter").click(function() {
     drawBarGraph(non_honorary_data)
 });
@@ -276,8 +272,6 @@ function drawAvgBarGraph(data) {
     var y = d3.scale.linear()
         .range([height, 0]);
 
-    console.log(data)
-
     x.domain(d3.extent(data, function(d) { return d[0]; }));
     y.domain([0, d3.max(data, function(d) { return d[1]; })]);
 
@@ -319,10 +313,8 @@ function filter_categories() {
 
     var category_filters = [];
     var category_legend = svg_length.selectAll(".category")
-    console.log(category_legend)
 
     category_legend.on("click", function(d) {
-        console.log("clicked")
         var index = category_filters.indexOf(d)
         if(index > -1) {
             category_filters.splice(index, 1)
@@ -330,7 +322,6 @@ function filter_categories() {
             category_filters.push(d)
         }
         var filtered_data = full_data.filter(function(d) { return category_filters.indexOf(d[8]) > -1 })
-        console.log(category_filters)
         drawBarGraph(filtered_data)
     });
 };
@@ -339,10 +330,8 @@ function filter_years() {
 
     var year_filters = [];
     var year_legend = svg_length.selectAll(".year")
-    console.log(year_legend)
 
     year_legend.on("click", function(d) {
-        console.log("clicked")
         var index = year_filters.indexOf(d)
         if(index > -1) {
             year_filters.splice(index, 1)
