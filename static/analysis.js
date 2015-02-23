@@ -33,9 +33,14 @@ $("#avg_speech_length_header").click(function() {
     // $("#avg_category_length_header").slideToggle();
 });
 
-var margin = {top: 10, right: 20, bottom: 30, left: 80};
-var width = 1300 - margin.left - margin.right;
+var w = window.innerWidth;
+var h = window.innerHeight;
+
+var margin = {top: 10, right: 20, bottom: 30, left: 50};
+var margin2 = {top: 460, right: 20, bottom: 20, left: 80};
+var width = w - margin.left - margin.right;
 var height = 450 - margin.top - margin.bottom;
+var height2 = 450 - margin2.top - margin2.bottom;
 var barPadding = 0.5;
 
 var svg_length = d3.select("#speech_length").append("svg")
@@ -58,6 +63,14 @@ for(i=0;i<full_data.length;i++) {
     }
 };
 
+var all_years = []
+
+for(i=0;i<full_data.length;i++) {
+    if(all_years.indexOf(full_data[i][7]) === -1) {
+        all_years.push(full_data[i][7]);
+    }
+};
+
 function filter_out_honorary() {
     this.checked ? drawBarGraph(full_data) : drawBarGraph(non_honorary_data)
 }
@@ -77,13 +90,19 @@ function drawBarGraph(data) {
     svg_length.selectAll("*").remove();
 
     var x = d3.time.scale()
-        .range([0, width - 250]);
+        .range([0, width - 450]);
+
+    var x2 = d3.time.scale()
+        .range([0, width - 450]);
 
     var x0 = d3.time.scale()
-        .range([0, width - 250]);
+        .range([0, width - 450]);
 
     var y = d3.scale.linear()
         .range([height, 0]);
+
+    var y2 = d3.scale.linear()
+        .range([height2, 0]);
 
     x.domain(d3.extent(data, function(d) { return +d[9]; }));
     x0.domain(d3.extent(data, function(d) { return d[11]; }));
@@ -91,6 +110,12 @@ function drawBarGraph(data) {
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .orient("bottom")
+        .ticks(10)
+        .tickFormat(d3.format(""));
+
+    var xAxis2 = d3.svg.axis()
+        .scale(x2)
         .orient("bottom")
         .ticks(10)
         .tickFormat(d3.format(""));
@@ -142,35 +167,75 @@ function drawBarGraph(data) {
         	$("#award").text(d[8])
         	$("#movie").text(d[2])
         	$("#speech").text(d[6])
-            $("#link").attr("href", (d[10]))
+            $("#link").attr("href", (d[10]));
         });
     
     var legendRectSize = 14;
     var legendSpacing = 2;
 
-    var legend = svg_length.selectAll(".legend")
+    var category_legend = svg_length.selectAll(".legend")
         .data(all_categories)
         .enter()
         .append("g")
-        .attr("class", "legend")
+        .attr("class", "category")
         .attr("transform", function(d, i) {
             var height = legendRectSize + legendSpacing;
             var offset = height * all_categories.length / 2;
-            var horz = 1000;
+            var horz = w - 450;
             var vert = i * height - offset + 200;
             return "translate(" + horz + "," + vert + ")";
         });
 
-    legend.append('rect')
+    category_legend.append('rect')
         .attr('width', legendRectSize)
         .attr('height', legendRectSize)
         .style('fill', color)
         .style('stroke', color);
 
-    legend.append('text')
+    category_legend.append('text')
         .attr('x', legendRectSize + legendSpacing)
         .attr('y', legendRectSize - legendSpacing)
         .text(function(d) { return d; });
+
+    var years_first_half = all_years.slice(0, all_years.length / 2)
+    var years_second_half = all_years.slice(all_years.length / 2, all_years.length)
+
+    var year_first_half_legend = svg_length.selectAll(".legend")
+        .data(years_first_half)
+        .enter()
+        .append("g")
+        .attr("class", "year")
+        .attr("transform", function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset = height * all_years.length / 2;
+            var horz = w - 250;
+            var vert = i * height - offset + 400;
+            return "translate(" + horz + "," + vert + ")";
+        });
+
+    var year_second_half_legend = svg_length.selectAll(".legend")
+        .data(years_second_half)
+        .enter()
+        .append("g")
+        .attr("class", "year")
+        .attr("transform", function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset = height * all_years.length / 2;
+            var horz = w - 200;
+            var vert = i * height - offset + 400;
+            return "translate(" + horz + "," + vert + ")";
+        });
+
+    year_first_half_legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
+
+    year_second_half_legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
+
 
     d3.select("#sort_checkbox").on("change", change);
 
@@ -184,7 +249,7 @@ function drawBarGraph(data) {
                 .attr("x", this.checked
                 ? function(d) { return x0(d[11]); }
                 : function(d) { return x(d[9]); })
-                .attr("width", width/data.length)
+                .attr("width", bar_width)
 
             transition.select(".x.axis")
                 .call(this.checked
@@ -194,7 +259,8 @@ function drawBarGraph(data) {
                 .delay(delay);
         };
 
-    filter_graph()
+    filter_categories();
+    filter_years();
 };
 
 function drawAvgBarGraph(data) {
@@ -245,12 +311,13 @@ function drawAvgBarGraph(data) {
         });
 };
 
-function filter_graph() {
+function filter_categories() {
 
     var category_filters = [];
-    var legend = svg_length.selectAll(".legend")
+    var category_legend = svg_length.selectAll(".category")
+    console.log(category_legend)
 
-    legend.on("click", function(d) {
+    category_legend.on("click", function(d) {
         console.log("clicked")
         var index = category_filters.indexOf(d)
         if(index > -1) {
@@ -260,6 +327,25 @@ function filter_graph() {
         }
         var filtered_data = full_data.filter(function(d) { return category_filters.indexOf(d[8]) > -1 })
         console.log(category_filters)
+        drawBarGraph(filtered_data)
+    });
+};
+
+function filter_years() {
+
+    var year_filters = [];
+    var year_legend = svg_length.selectAll(".year")
+    console.log(year_legend)
+
+    year_legend.on("click", function(d) {
+        console.log("clicked")
+        var index = year_filters.indexOf(d)
+        if(index > -1) {
+            year_filters.splice(index, 1)
+        } else {
+            year_filters.push(d)
+        }
+        var filtered_data = full_data.filter(function(d) { return year_filters.indexOf(d[7]) > -1 })
         drawBarGraph(filtered_data)
     });
 };

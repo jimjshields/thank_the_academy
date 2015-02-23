@@ -6,11 +6,11 @@
 	fill: #b29254;
 }
 
-.legend {
+.category, .year {
 	font-size: 12px;
 }
 
-.legend:hover, #award:hover {
+.category:hover, #award:hover, .year:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
