@@ -157,8 +157,12 @@ function drawBarGraph(data) {
         .attr("width", (bar_width))
         .attr("y", function(d) { return y(d[11]); })
         .attr("height", function(d) { return height - y(d[11]); })
-        .attr('fill', function(d) { 
-            return color(d[8])
+        .attr('fill', function(d) {
+            if(data.length > 50) { 
+                return color(d[8])
+            } else {
+                return 'steelblue'
+            }
         })
         .on("mousemove", function(d) {
         	$("#winner").text(d[3])
