@@ -2,7 +2,6 @@ import nltk
 nltk.download('punkt')
 from nltk import word_tokenize
 from collections import defaultdict, Counter
-from sys import argv
 import random
 import operator
 import bisect
@@ -11,8 +10,8 @@ import re
 
 class MarkovGenerator(object):
 
-    '''class for making markov-generated text output of a 
-    user-supplied length based on the supplied source text'''
+    """Class for creating, cleaning, and returning markov-generated 
+       text of a given length from a given text."""
 
     def __init__(self, text, length, ngram=2):
         self.text = text
@@ -21,13 +20,10 @@ class MarkovGenerator(object):
         self.markov_dict = self.make_markov_dict()
 
     def make_markov_dict(self):
-        '''returns a dict of {ngram tuple: Counter} 
-        counting the number of times words follow an ngram'''
-        text = self.text
-        ngram = self.ngram
-        words = text
-        words = word_tokenize(text)
-        zippy_words = zip(*[words[i:] for i in xrange(ngram + 1)])
+        """Returns a dict of {ngram tuple: Counter} 
+           counting the number of times words follow an ngram."""
+        words = word_tokenize(self.text)
+        zippy_words = zip(*[words[i:] for i in xrange(self.ngram + 1)])
         markov_dict = defaultdict(Counter)
         for t in zippy_words:
             a, b = t[:-1], t[-1]
